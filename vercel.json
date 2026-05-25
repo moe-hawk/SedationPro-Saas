@@ -1,11 +1,15 @@
 {
   "functions": {
-    "api/[...path].js": {
+    "api/index.js": {
       "maxDuration": 30,
       "includeFiles": "{apps/api/dist/**,packages/clinical/dist/**,packages/db/dist/**,packages/db/prisma/**}"
     }
   },
   "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "/api?path=:path*"
+    },
     {
       "source": "/((?!api).*)",
       "destination": "/index.html"
@@ -13,4 +17,4 @@
   ],
   "buildCommand": "pnpm build:vercel",
   "outputDirectory": "apps/saas/dist"
-}
+}\n
