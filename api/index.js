@@ -1,4 +1,4 @@
-import app from '../apps/api/dist/server.js';
+﻿import app from '../apps/api/dist/server.js';
 
 export const config = {
   api: {
@@ -10,6 +10,14 @@ function first(value) {
   return Array.isArray(value) ? value[0] : value;
 }
 
+function stripLeadingSlashes(value) {
+  let output = String(value || '');
+  while (output.startsWith('/')) {
+    output = output.slice(1);
+  }
+  return output;
+}
+
 function pathFromRequest(req) {
   const url = new URL(req.url || '/', 'http://vercel.local');
   const fromQuery = url.searchParams.get('path') || first(req.query?.path);
@@ -17,7 +25,7 @@ function pathFromRequest(req) {
   if (typeof fromQuery === 'string' && fromQuery.length > 0) {
     url.searchParams.delete('path');
     const qs = url.searchParams.toString();
-    return '/' + fromQuery.replace(/^\\/+/, '') + (qs ? '?' + qs : '');
+    return '/' + stripLeadingSlashes(fromQuery) + (qs ? '?' + qs : '');
   }
 
   if (req.url?.startsWith('/api/')) {
