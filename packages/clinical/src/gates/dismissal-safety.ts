@@ -1,0 +1,137 @@
+import { classifyBp } from '../vitals/bp.js';
+import { classifySpo2 } from '../vitals/spo2.js';
+
+/**
+ * "Do Not Dismiss" hard-stop registry from the production brief (Gap B).
+ *
+ * The provider can override any blocker, but the override has to be an
+ * explicit, typed action — the engine returns the blockers, the UI is
+ * responsible for showing them and capturing the justification.
+ *
+ * Inputs are intentionally simple primitives so the UI can collect them in
+ * any shape (form, store, ad-hoc object) and call this function pure.
+ */
+export interface DismissalInputs {
+  /** Was the patient ambulatory at discharge time? */
+  readonly ambulatory: boolean;
+  /** Oriented x3 (person · place · time)? */
+  readonly orientedX3: boolean;
+  /** Any nausea / vomiting noted in recovery? */
+  readonly nauseaOrVomiting: boolean;
+  /** Excessive bleeding observed during or after the procedure? */
+  readonly excessiveBleeding: boolean;
+  /** Most recent SpO₂ % — null when not measured. */
+  readonly spo2: number | null;
+  /** Most recent BP — passed to `classifyBp`. */
+  readonly bp: { readonly sbp: number | null; readonly dbp: number | null };
+  /** Was a responsible companion documented (name + relation)? */
+  readonly companionDocumented: boolean;
+  /** Provider signature captured? */
+  readonly providerSigned: boolean;
+  /**
+   * Pulse-oximetry printout copied and filed with the sedation visit document.
+   * Legacy clinical anchor — the SpO₂ trend record is the medicolegal proof
+   * the patient met the 94 % floor through the case, not just at the moment
+   * of discharge.
+   */
+  readonly pulseOxPrintoutFiled: boolean;
+}
+
+export type DismissalBlockerCode =
+  | 'not-ambulatory'
+  | 'not-oriented'
+  | 'nausea-vomiting'
+  | 'excessive-bleeding'
+  | 'low-spo2'
+  | 'bp-crisis'
+  | 'no-companion'
+  | 'no-provider-signature'
+  | 'no-pulse-ox-printout';
+
+export interface DismissalBlocker {
+  readonly code: DismissalBlockerCode;
+  readonly label: string;
+  /** Free-form clinical note explaining the threshold that fired. */
+  readonly detail?: string;
+}
+
+export interface DismissalSafety {
+  /** True when no blockers fired. */
+  readonly clear: boolean;
+  /** True when the dismissal is blocked (one or more blockers fired). */
+  readonly blocked: boolean;
+  readonly blockers: ReadonlyArray<DismissalBlocker>;
+}
+
+/** SpO₂ threshold for discharge; values below this are not in the safe classifier tier. */
+const SPO2_SAFE_FLOOR = 95;
+
+/**
+ * Evaluate dismissal safety. Returns `{ clear: true }` only when every gate
+ * passes. The UI uses this to block the Sign-Note button; an override path
+ * must record the blockers it bypassed.
+ */
+export function dismissalSafety(inputs: DismissalInputs): DismissalSafety {
+  const blockers: DismissalBlocker[] = [];
+
+  if (!inputs.ambulatory) {
+    blockers.push({ code: 'not-ambulatory', label: 'Patient not ambulatory at discharge' });
+  }
+  if (!inputs.orientedX3) {
+    blockers.push({ code: 'not-oriented', label: 'Patient not oriented ×3' });
+  }
+  if (inputs.nauseaOrVomiting) {
+    blockers.push({ code: 'nausea-vomiting', label: 'Nausea or vomiting noted in recovery' });
+  }
+  if (inputs.excessiveBleeding) {
+    blockers.push({ code: 'excessive-bleeding', label: 'Excessive bleeding observed' });
+  }
+
+  if (inputs.spo2 !== null && Number.isFinite(inputs.spo2)) {
+    const spo2Result = classifySpo2(inputs.spo2);
+    if (spo2Result && spo2Result.severity !== 'safe') {
+      blockers.push({
+        code: 'low-spo2',
+        label: `SpO₂ below safe floor (${inputs.spo2}%)`,
+        detail: `Minimum SpO₂ for discharge is ${SPO2_SAFE_FLOOR}%.`,
+      });
+    }
+  }
+
+  if (inputs.bp.sbp !== null && inputs.bp.dbp !== null) {
+    const bpResult = classifyBp(inputs.bp.sbp, inputs.bp.dbp);
+    if (bpResult && bpResult.severity === 'crisis') {
+      blockers.push({
+        code: 'bp-crisis',
+        label: `Blood pressure in crisis range (${inputs.bp.sbp}/${inputs.bp.dbp})`,
+        detail: 'Hypertensive crisis ≥180/120 mmHg — defer discharge.',
+      });
+    }
+  }
+
+  if (!inputs.companionDocumented) {
+    blockers.push({
+      code: 'no-companion',
+      label: 'No responsible companion documented',
+      detail: 'Name and relation are both required before discharge.',
+    });
+  }
+
+  if (!inputs.providerSigned) {
+    blockers.push({ code: 'no-provider-signature', label: 'Provider signature missing' });
+  }
+
+  if (!inputs.pulseOxPrintoutFiled) {
+    blockers.push({
+      code: 'no-pulse-ox-printout',
+      label: 'Pulse-oximetry printout not filed',
+      detail: 'SpO₂ trend printout must be copied and stapled to the sedation visit document.',
+    });
+  }
+
+  return {
+    clear: blockers.length === 0,
+    blocked: blockers.length > 0,
+    blockers,
+  };
+}

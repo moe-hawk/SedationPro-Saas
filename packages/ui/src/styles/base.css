@@ -1,0 +1,130 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+  min-height: 100dvh;
+}
+
+html {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-system);
+  font-size: var(--type-body);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+  /* Block the iOS long-press text-select + magnifier on chrome — labels,
+     buttons, cards. Editable surfaces re-enable below so typing, copying,
+     and the OS spellcheck still work in inputs/textareas. */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+[contenteditable='true'] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+}
+
+.title-display {
+  font-size: var(--type-display);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  margin: 0;
+}
+
+.title {
+  font-size: var(--type-title);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  margin: 0;
+}
+
+.heading {
+  font-size: var(--type-heading);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  /* Owns its gap to the content below so the title→body rhythm is
+     consistent regardless of the caller's mt-* (margins collapse in the
+     card's block flow; flex-row headings already zero this via their
+     own scoped overrides). */
+  margin: 0 0 var(--sp-3);
+}
+
+/* Quiet numeric step index inside a numbered card .heading. Mono + tabular
+   so 1…14 (and "13b") align like an index; tertiary + medium so the title
+   stays dominant. Replaces the inline "N ·" prefix. */
+.heading-step {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--type-footnote);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-normal);
+  color: var(--color-text-tertiary);
+  margin-right: var(--sp-2);
+}
+
+.body {
+  font-size: var(--type-body);
+  line-height: var(--leading-normal);
+  margin: 0;
+}
+
+.footnote {
+  font-size: var(--type-footnote);
+  line-height: var(--leading-normal);
+  margin: 0;
+}
+
+.caption {
+  font-size: var(--type-caption);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}

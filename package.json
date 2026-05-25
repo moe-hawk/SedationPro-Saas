@@ -1,0 +1,38 @@
+{
+  "name": "sedation-pro",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "typecheck": "pnpm db:generate && pnpm -r --parallel typecheck",
+    "test": "pnpm -r --parallel test",
+    "build:vercel": "pnpm db:generate && pnpm build:packages && pnpm --filter @sedation-pro/api build && pnpm --filter @sedation-pro/saas build",
+    "build": "pnpm db:generate && pnpm build:packages && pnpm --filter @sedation-pro/mobile build && pnpm --filter @sedation-pro/api build && pnpm --filter @sedation-pro/saas build",
+    "build:mobile": "pnpm --filter @sedation-pro/mobile build",
+    "build:saas": "pnpm --filter @sedation-pro/saas build",
+    "dev": "pnpm --filter @sedation-pro/mobile dev",
+    "dev:mobile": "pnpm --filter @sedation-pro/mobile dev",
+    "dev:saas": "pnpm --filter @sedation-pro/saas dev",
+    "dev:api": "pnpm --filter @sedation-pro/api dev",
+    "db:generate": "pnpm --filter @sedation-pro/db generate",
+    "db:push": "pnpm --filter @sedation-pro/db push",
+    "db:migrate": "pnpm --filter @sedation-pro/db migrate",
+    "db:studio": "pnpm --filter @sedation-pro/db studio",
+    "format": "prettier --write \"**/*.{ts,vue,json,md,yml,yaml,css,html,prisma}\"",
+    "format:check": "prettier --check \"**/*.{ts,vue,json,md,yml,yaml,css,html,prisma}\"",
+    "dev:cloud": "concurrently -n api,saas -c blue,green \"pnpm dev:api\" \"pnpm dev:saas\"",
+    "build:api": "pnpm db:generate && pnpm build:packages && pnpm --filter @sedation-pro/api build",
+    "build:packages": "pnpm --filter @sedation-pro/clinical build && pnpm --filter @sedation-pro/db build"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3",
+    "concurrently": "^9.1.2"
+  }
+}

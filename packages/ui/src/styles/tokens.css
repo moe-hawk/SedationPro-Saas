@@ -1,0 +1,223 @@
+:root {
+  /* -------- Typography scale (iOS-inspired) -------- */
+  --type-display: 1.75rem; /* 28 */
+  --type-title: 1.25rem; /* 20 */
+  --type-heading: 1.0625rem; /* 17 */
+  --type-body: 0.9375rem; /* 15 */
+  --type-footnote: 0.8125rem; /* 13 */
+  --type-caption: 0.6875rem; /* 11 */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --leading-tight: 1.2;
+  --leading-normal: 1.4;
+  --leading-loose: 1.6;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+
+  /* -------- Spacing (4px base) -------- */
+  --sp-1: 0.25rem; /* 4  */
+  --sp-2: 0.5rem; /* 8  */
+  --sp-3: 0.75rem; /* 12 */
+  --sp-4: 1rem; /* 16 */
+  --sp-5: 1.5rem; /* 24 */
+  --sp-6: 2rem; /* 32 */
+  --sp-7: 3rem; /* 48 */
+  --sp-8: 4rem; /* 64 */
+
+  /* -------- Radius -------- */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-pill: 999px;
+
+  /* -------- Motion -------- */
+  --ease-spring: cubic-bezier(0.32, 1.02, 0.56, 1);
+  --ease-decel: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-accel: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --dur-150: 150ms;
+  --dur-250: 250ms;
+  --dur-400: 400ms;
+
+  /* -------- Color palette (dark — default) --------
+   *
+   * Light-mode palette is in the [data-theme='light'] block below. Anything
+   * that needs to flip between themes lives in a CSS variable here; nothing
+   * should hardcode rgba(255,255,255,…) or rgba(11,20,34,…) directly.
+   */
+  --color-bg: #0b1220;
+  --color-surface-subtle: rgba(255, 255, 255, 0.03);
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-surface-elevated: rgba(255, 255, 255, 0.08);
+  --color-surface-overlay: rgba(255, 255, 255, 0.12);
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.24);
+
+  /* Solid-ish surfaces — opaque enough to read as "above the background"
+     rather than a translucent wash over it. */
+  --color-card-bg: rgba(18, 27, 46, 0.95);
+  --color-frosted-bg: rgba(11, 20, 34, 0.85);
+  --color-input-bg: #0d1527;
+
+  --color-text-primary: rgba(255, 255, 255, 0.95);
+  --color-text-secondary: rgba(255, 255, 255, 0.7);
+  --color-text-tertiary: rgba(255, 255, 255, 0.6);
+  --color-text-disabled: rgba(255, 255, 255, 0.3);
+
+  /* Status colors (match clinical-engine Severity buckets). */
+  --color-accent: #3b82f6;
+  --color-accent-soft: rgba(59, 130, 246, 0.18);
+  /* Softer accent for input focus borders — saturated solid accent reads
+     too "hot" next to muted chrome. `color-mix` keeps it theme-aware. */
+  --color-accent-muted: color-mix(in srgb, var(--color-accent) 60%, transparent);
+  --color-good: #4ade80;
+  --color-good-soft: rgba(74, 222, 128, 0.12);
+  --color-warn: #facc15;
+  --color-warn-soft: rgba(250, 204, 21, 0.12);
+  --color-danger: #fb7185;
+  --color-danger-soft: rgba(251, 113, 133, 0.12);
+  --color-crisis: #ef4444;
+  --color-crisis-soft: rgba(239, 68, 68, 0.14);
+
+  /* Drug-tone palette — fixed identities used by buttons, pills, swatches. */
+  --color-orange: #f97316;
+  --color-orange-soft: rgba(249, 115, 22, 0.12);
+  --color-blue: #3b82f6;
+  --color-blue-soft: rgba(59, 130, 246, 0.12);
+  --color-slate: #94a3b8;
+  --color-slate-soft: rgba(148, 163, 184, 0.12);
+  --color-purple: #8b5cf6;
+  --color-purple-soft: rgba(139, 92, 246, 0.12);
+  --color-red: #ef4444;
+  --color-red-soft: rgba(239, 68, 68, 0.12);
+  --color-gold: #facc15;
+  --color-gold-soft: rgba(250, 204, 21, 0.12);
+  --color-tan: #d4a574;
+  --color-tan-soft: rgba(212, 165, 116, 0.14);
+
+  /* -------- Elevation (two-layer, iOS-style) --------
+     Containers express depth via shadow + background contrast, not borders.
+     Borders are reserved for interactive controls (inputs, selects). */
+  --shadow-sm: 0 1px 1px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.16), 0 24px 60px rgba(0, 0, 0, 0.5);
+
+  /* Faint top-edge highlight that gives flat surfaces an iOS-polished
+     curvature. Layered as the topmost background on cards / primary
+     buttons. Theme-aware via the light-block override below. */
+  --surface-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0));
+
+  /* Focus is signalled in-place — inputs shift border to `--color-accent`,
+     the checkbox dot picks up the accent. No outer halo (`box-shadow`
+     gets clipped by some primitives' overflow:hidden, so the experience
+     was inconsistent — some glowy, some not). */
+
+  /* Phase tints — drive sticky bar, nav drawer, card border-lefts, and the
+     phase-progress rail. Collapsed to a single accent (was blue/purple/
+     orange/green per phase): one calm brand colour reads more premium, and
+     phase identity is carried by the label/number, not hue. Defined via the
+     accent tokens so the light theme inherits automatically (no per-phase
+     override needed below). Drug-tone colours stay distinct — those mirror a
+     real syringe-tape convention, not decoration. */
+  --ph1-color: var(--color-accent);
+  --ph1-soft: var(--color-accent-soft);
+  --ph2-color: var(--color-accent);
+  --ph2-soft: var(--color-accent-soft);
+  --ph3-color: var(--color-accent);
+  --ph3-soft: var(--color-accent-soft);
+  --ph4-color: var(--color-accent);
+  --ph4-soft: var(--color-accent-soft);
+
+  /* -------- Layout -------- */
+  --safe-top: env(safe-area-inset-top);
+  --safe-bottom: env(safe-area-inset-bottom);
+  --safe-left: env(safe-area-inset-left);
+  --safe-right: env(safe-area-inset-right);
+
+  /* -------- Typography stack -------- */
+  --font-system:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+/* -------- Light theme override --------
+ *
+ * Activated when `documentElement.dataset.theme = 'light'`. The useTheme()
+ * composable resolves 'auto' against `prefers-color-scheme` at boot and
+ * subscribes to system changes, so this block flips on or off cleanly.
+ *
+ * Accent + drug-tone hues are darker than the dark-mode hexes so they keep
+ * legible contrast on a near-white background; the soft alphas stay similar
+ * because the underlying hex already has more lightness headroom.
+ */
+:root[data-theme='light'] {
+  --color-bg: #f8fafc;
+  --color-surface-subtle: rgba(15, 23, 42, 0.025);
+  --color-surface: rgba(15, 23, 42, 0.04);
+  --color-surface-elevated: rgba(15, 23, 42, 0.06);
+  --color-surface-overlay: rgba(15, 23, 42, 0.09);
+  --color-border: rgba(15, 23, 42, 0.1);
+  --color-border-strong: rgba(15, 23, 42, 0.2);
+
+  --color-card-bg: #ffffff;
+  --color-frosted-bg: rgba(248, 250, 252, 0.85);
+  --color-input-bg: #ffffff;
+
+  --color-text-primary: rgba(15, 23, 42, 0.95);
+  --color-text-secondary: rgba(15, 23, 42, 0.65);
+  --color-text-tertiary: rgba(15, 23, 42, 0.6);
+  --color-text-disabled: rgba(15, 23, 42, 0.3);
+
+  --shadow-sm: 0 1px 1px rgba(15, 23, 42, 0.05), 0 2px 6px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 4px 8px rgba(15, 23, 42, 0.08), 0 24px 60px rgba(15, 23, 42, 0.18);
+  --surface-highlight: linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+
+  --color-accent: #1d4ed8;
+  --color-accent-soft: rgba(29, 78, 216, 0.1);
+  --color-good: #15803d;
+  --color-good-soft: rgba(21, 128, 61, 0.12);
+  --color-warn: #b45309;
+  --color-warn-soft: rgba(180, 83, 9, 0.12);
+  --color-danger: #be123c;
+  --color-danger-soft: rgba(190, 18, 60, 0.1);
+  --color-crisis: #b91c1c;
+  --color-crisis-soft: rgba(185, 28, 28, 0.1);
+
+  --color-orange: #c2410c;
+  --color-orange-soft: rgba(194, 65, 12, 0.1);
+  --color-blue: #1d4ed8;
+  --color-blue-soft: rgba(29, 78, 216, 0.1);
+  --color-slate: #475569;
+  --color-slate-soft: rgba(71, 85, 105, 0.1);
+  --color-purple: #6d28d9;
+  --color-purple-soft: rgba(109, 40, 217, 0.1);
+  --color-red: #b91c1c;
+  --color-red-soft: rgba(185, 28, 28, 0.1);
+  --color-gold: #a16207;
+  --color-gold-soft: rgba(161, 98, 7, 0.1);
+  --color-tan: #92400e;
+  --color-tan-soft: rgba(146, 64, 14, 0.1);
+
+  /* Phase tints inherit from :root (all → accent); only the accent tokens
+     above need a light override, so there are no per-phase lines here. */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

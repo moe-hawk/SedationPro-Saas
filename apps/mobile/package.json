@@ -1,0 +1,39 @@
+{
+  "name": "@sedation-pro/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "icons:generate": "node scripts/generate-icons.mjs",
+    "dev": "node scripts/generate-icons.mjs && vite",
+    "build": "node scripts/generate-icons.mjs && vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "cap:sync": "cap sync"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/ios": "^6.2.0",
+    "@sedation-pro/clinical": "workspace:*",
+    "@sedation-pro/persistence": "workspace:*",
+    "@sedation-pro/ui": "workspace:*",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.13",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/test-utils": "^2.4.6",
+    "@vue/tsconfig": "^0.7.0",
+    "happy-dom": "^15.11.7",
+    "sharp": "^0.34.5",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.5",
+    "vite-plugin-pwa": "^1.3.0",
+    "vitest": "^2.1.8",
+    "vue-tsc": "^2.1.10"
+  }
+}

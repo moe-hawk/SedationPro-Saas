@@ -1,0 +1,39 @@
+{
+  "name": "Sedation Pro",
+  "short_name": "Sedation Pro",
+  "description": "Chairside IV sedation companion for dental practices — formulary, dosing math, phase gating, clinical note generation.",
+  "id": "/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0b1220",
+  "background_color": "#0b1220",
+  "categories": ["medical", "healthcare", "productivity"],
+  "icons": [
+    {
+      "src": "logo-source.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
