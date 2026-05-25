@@ -39,17 +39,27 @@ const app = Fastify({ logger: true });
 const stripe = env.STRIPE_SECRET_KEY ? new Stripe(env.STRIPE_SECRET_KEY) : null;
 
 function firebaseAuth(): ReturnType<typeof getAuth> | null {
+  // Testing/demo mode: bypass Firebase Admin entirely so malformed or missing
+  // Firebase service-account env vars cannot crash the Vercel function at import time.
+  if (env.ENABLE_DEV_LOGIN) return null;
+
   if (!env.FIREBASE_PROJECT_ID || !env.FIREBASE_CLIENT_EMAIL || !env.FIREBASE_PRIVATE_KEY) return null;
-  if (getApps().length === 0) {
-    initializeApp({
-      credential: cert({
-        projectId: env.FIREBASE_PROJECT_ID,
-        clientEmail: env.FIREBASE_CLIENT_EMAIL,
-        privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-      }),
-    });
+
+  try {
+    if (getApps().length === 0) {
+      initializeApp({
+        credential: cert({
+          projectId: env.FIREBASE_PROJECT_ID,
+          clientEmail: env.FIREBASE_CLIENT_EMAIL,
+          privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+        }),
+      });
+    }
+    return getAuth();
+  } catch (error) {
+    app.log.error({ err: error }, 'Firebase Admin initialization failed; Firebase login disabled');
+    return null;
   }
-  return getAuth();
 }
 
 const firebase = firebaseAuth();
@@ -440,7 +450,7 @@ app.post(
     },
   },
   async (request, reply) => {
-    if (!env.ENABLE_DEV_LOGIN || isProduction) {
+    if (!env.ENABLE_DEV_LOGIN) {
       return reply.code(403).send({ error: 'dev login is disabled' });
     }
 
