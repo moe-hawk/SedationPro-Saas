@@ -2,7 +2,7 @@
 // All case persistence is handled by the cloud API/SQL database.
 (globalThis as typeof globalThis & { __SEDATION_PRO_CLOUD_ONLY__?: boolean }).__SEDATION_PRO_CLOUD_ONLY__ = true;
 
-import '@sedation-pro/ui/styles';
+import '../../../packages/ui/src/styles/index.css';
 import '@/styles/utilities.css';
 import './styles.css';
 // Side-effect: resolves and applies the original Sedation Pro theme before first paint.
